@@ -19,8 +19,8 @@
 require_once DIR_FS_INC     . 'xtc_create_password.inc.php';
 require_once DIR_FS_INC     . 'xtc_encrypt_password.inc.php';
 require_once DIR_FS_INC     . 'xtc_validate_password.inc.php';
-require_once (strpos(DIR_WS_CLASSES, DIR_FS_CATALOG) === 0 ? '' : DIR_FS_CATALOG) . DIR_WS_CLASSES . 'pbkdf2/class.xtc_pbkdf2.php';
-require_once (strpos(DIR_WS_CLASSES, DIR_FS_CATALOG) === 0 ? '' : DIR_FS_CATALOG) . DIR_WS_CLASSES . 'scrypt/class.xtc_scrypt.php';
+require_once                  'pbkdf2/class.xtc_pbkdf2.php';
+require_once                  'scrypt/class.xtc_scrypt.php';
 
 class xtc_encryption_wrapper {
 	
