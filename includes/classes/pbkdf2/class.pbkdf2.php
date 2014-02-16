@@ -8,7 +8,6 @@ abstract class Pbkdf2Abstract
 {
 
     static protected $PBKDF2_HASH_ALGORITHM = "sha256";
-    static public    $PBKDF2_ITERATIONS     = 1000;
     static protected $PBKDF2_SALT_BYTES     = 24;
     static protected $PBKDF2_HASH_BYTES     = 24;
     static protected $HASH_SECTIONS         = 4;
@@ -17,13 +16,13 @@ abstract class Pbkdf2Abstract
     static protected $HASH_SALT_INDEX       = 2;
     static protected $HASH_PBKDF2_INDEX     = 3;
 
-    public static function create_hash($password)
+    public static function create_hash($password, $iterations)
     {
         // format: algorithm:iterations:salt:hash
         $salt = base64_encode(mcrypt_create_iv(self::$PBKDF2_SALT_BYTES, MCRYPT_DEV_URANDOM));
-        return self::$PBKDF2_HASH_ALGORITHM . ":" . self::$PBKDF2_ITERATIONS . ":" . $salt . ":" .
-            base64_encode($this->pbkdf2(
-                    self::$PBKDF2_HASH_ALGORITHM, $password, $salt, self::$PBKDF2_ITERATIONS, self::$PBKDF2_HASH_BYTES, true
+        return self::$PBKDF2_HASH_ALGORITHM . ":" . $iterations . ":" . $salt . ":" .
+            base64_encode(self::pbkdf2(
+                    self::$PBKDF2_HASH_ALGORITHM, $password, $salt, $iterations, self::$PBKDF2_HASH_BYTES, true
         ));
     }
 
@@ -32,8 +31,8 @@ abstract class Pbkdf2Abstract
         $params = explode(":", $good_hash);
         if (count($params) < self::$HASH_SECTIONS) return false;
         $pbkdf2 = base64_decode($params[self::$HASH_PBKDF2_INDEX]);
-        return $this->slow_equals(
-                $pbkdf2, $this->pbkdf2(
+        return self::slow_equals(
+                $pbkdf2, self::pbkdf2(
                     $params[self::$HASH_ALGORITHM_INDEX], $password, $params[self::$HASH_SALT_INDEX], (int) $params[self::$HASH_ITERATION_INDEX], strlen($pbkdf2), true
                 )
         );

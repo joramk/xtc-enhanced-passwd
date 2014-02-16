@@ -22,7 +22,11 @@ class xtc_pbkdf2 extends Pbkdf2Abstract {
 
 	static public $PBKDF2_ITERATIONS = 262144;
 
-    public static function getIterationCount($hash) {
+	public static function create_hash($password) {
+		return parent::create_hash($password, self::$PBKDF2_ITERATIONS);
+	}
+	
+	public static function getIterationCount($hash) {
         $params = explode(":", $hash);
         return $params[self::$HASH_ITERATION_INDEX];
     }
