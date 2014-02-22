@@ -57,12 +57,10 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
 			$_GET['login'] = 'fail';
 			$info_message = TEXT_LOGIN_ERROR;
 		} else {
-			if (class_exists('xtc_encryption_wrapper')) {
-				if (xtc_encryption_wrapper::getAlgorithm($check_customer['customers_password']) != xtc_encryption_wrapper::$ALGORITHM_DEFAULT
-						|| xtc_encryption_wrapper::getIterationCount($check_customer['customers_password']) != xtc_encryption_wrapper::getIterations()) {
-					xtc_db_query("UPDATE " . TABLE_CUSTOMERS . " SET customers_password = '".
-							xtc_encryption_wrapper::createHash($password) ."' WHERE customers_id='". $check_customer['customers_id'] ."'");
-				}
+			if (class_exists('xtc_encryption_wrapper') &&
+					xtc_encryption_wrapper::needsAlgorithmUpdate($check_customer['customers_password'])) {
+				xtc_db_query("UPDATE " . TABLE_CUSTOMERS . " SET customers_password = '".
+						xtc_encryption_wrapper::createHash($password) ."' WHERE customers_id='". $check_customer['customers_id'] ."'");
 			}
 			if (SESSION_RECREATE == 'True') {
 				xtc_session_recreate();

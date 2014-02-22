@@ -16,11 +16,15 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-require_once DIR_FS_INC . 'xtc_create_password.inc.php';
-require_once DIR_FS_INC . 'xtc_encrypt_password.inc.php';
-require_once DIR_FS_INC . 'xtc_validate_password.inc.php';
-require_once              'pbkdf2/class.xtc_pbkdf2.php';
-require_once              'scrypt/class.xtc_scrypt.php';
+abstract class xtc_encryption_algorithm {
+	
+	public function createHash();
+	public function validatePassword();
+	public function getIterations();
+}
+
+require_once 'pbkdf2/class.xtc_pbkdf2.php';
+require_once 'scrypt/class.xtc_scrypt.php';
 
 class xtc_encryption_wrapper {
 	
@@ -33,50 +37,31 @@ class xtc_encryption_wrapper {
 	public static function createHash($password, $algorithm = null) {
 		$algorithm = self::checkAlgorithm($algorithm);
 		if ($algorithm == self::ALGORITHM_PBKDF2) {
-			return xtc_pbkdf2::create_hash($password);
+			return xtc_pbkdf2::createHash($password);
 		} elseif ($algorithm == self::ALGORITHM_SCRYPT) {
-			return xtc_scrypt::hash($password);
+			return xtc_scrypt::createHash($password);
 		} elseif ($algorithm == self::ALGORITHM_MD5) {
-			return xtc_encrypt_password($password);
+			return md5($password);
 		}
 	}
 	
 	public static function validatePassword($password, $hash, $algorithm = null) {
 		$algorithm = self::checkAlgorithm($algorithm, $hash);
 		if ($algorithm == self::ALGORITHM_PBKDF2) {
-			return xtc_pbkdf2::validate_password($password, $hash);
+			return xtc_pbkdf2::validatePassword($password, $hash);
 		} elseif ($algorithm == self::ALGORITHM_SCRYPT) {
-			return xtc_scrypt::check($password, $hash);
+			return xtc_scrypt::validatePassword($password, $hash);
 		} elseif ($algorithm == self::ALGORITHM_MD5) {
-			return xtc_validate_password($password, $hash);
+			return md5($password) == $hash;
 		}
 	}
 	
-	public static function getIterationCount($hash, $algorithm = null) {
-		$algorithm = self::checkAlgorithm($algorithm, $hash);
-		if ($algorithm == self::ALGORITHM_PBKDF2) {
-			return xtc_pbkdf2::getIterationCount($hash);
-		} elseif ($algorithm == self::ALGORITHM_SCRYPT) {
-			return xtc_scrypt::getIterationCount($hash);
-		} elseif ($algorithm == self::ALGORITHM_MD5) {
-			return 0;
-		}
+	public static function needsAlgorithmUpdate($hash) {
+		return self::getAlgorithm($hash) != self::$ALGORITHM_DEFAULT
+				|| self::getIterations($hash) != self::getIterations();
 	}
-	
-	public static function getIterations($algorithm = null) {
-		$algorithm = self::checkAlgorithm($algorithm);
-		if ($algorithm == self::ALGORITHM_PBKDF2) {
-			return xtc_pbkdf2::$PBKDF2_ITERATIONS;
-		} elseif ($algorithm == self::ALGORITHM_SCRYPT) {
-			return sha1(xtc_scrypt::$CPU_DIFFICULTY . '$' .
-					xtc_scrypt::$MEMORY_DIFFICULTY . '$' .
-					xtc_scrypt::$PARALLEL_DIFFICULTY);
-		} elseif ($algorithm == self::ALGORITHM_MD5) {
-			return 0;
-		}
-	}
-	
-	public static function getAlgorithm($hash) {
+
+	private static function getAlgorithm($hash) {
 		if (preg_match('/^.+:\d+:.+:.+$/', $hash)) {
 			return self::ALGORITHM_PBKDF2;
 		} elseif (preg_match('/^\d+\$\d+\$\d+\$.+\$.+$/', $hash)) {
@@ -86,6 +71,28 @@ class xtc_encryption_wrapper {
 		} else {
 			trigger_error(__CLASS__ . ':' . __FUNCTION__ .
 					':Unknown encryption algorithm detected.', E_USER_ERROR);
+		}
+	}
+/*	
+	private static function getIterationCount($hash, $algorithm = null) {
+		$algorithm = self::checkAlgorithm($algorithm, $hash);
+		if ($algorithm == self::ALGORITHM_PBKDF2) {
+			return xtc_pbkdf2::getIterationCount($hash);
+		} elseif ($algorithm == self::ALGORITHM_SCRYPT) {
+			return xtc_scrypt::getIterationCount($hash);
+		} elseif ($algorithm == self::ALGORITHM_MD5) {
+			return 0;
+		}
+	}
+*/	
+	private static function getIterations($hash = null, $algorithm = null) {
+		$algorithm = self::checkAlgorithm($algorithm, $hash);
+		if ($algorithm == self::ALGORITHM_PBKDF2) {
+			return empty($hash) ? xtc_pbkdf2::getIterations() : xtc_pbkdf2::getIterations($hash);
+		} elseif ($algorithm == self::ALGORITHM_SCRYPT) {
+			return empty($hash) ? xtc_scrypt::getIterations() : xtc_scrypt::getIterations($hash);
+		} elseif ($algorithm == self::ALGORITHM_MD5) {
+			return 0;
 		}
 	}
 	
