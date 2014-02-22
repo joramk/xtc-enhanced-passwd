@@ -20,7 +20,7 @@ interface xtc_encryption_algorithm {
 
 	static function createHash($password);
 	static function validatePassword($password, $hash);
-	static function getIterations($hash);
+	static function getIterations($hash = null);
 }
 
 // Load required encryption algorithm classes always from same location
