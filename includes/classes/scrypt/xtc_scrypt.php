@@ -45,6 +45,6 @@ class xtc_scrypt extends Password implements xtc_encryption_algorithm {
 		} else {
 	        list ($N, $r, $p) = explode('$', $hash);
 		}
-		return sha1($N . '$' . $r . '$' . $p);
+		return $N . '$' . $r . '$' . $p;
 	}
 }
