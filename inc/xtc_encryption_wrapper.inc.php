@@ -16,11 +16,11 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-abstract class xtc_encryption_algorithm {
+interface xtc_encryption_algorithm {
 
-	public function createHash();
-	public function validatePassword();
-	public function getIterations();
+	static function createHash($password);
+	static function validatePassword($password, $hash);
+	static function getIterations($hash);
 }
 
 // Load required encryption algorithm classes always from same location

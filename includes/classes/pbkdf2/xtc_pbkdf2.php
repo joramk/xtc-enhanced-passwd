@@ -18,7 +18,7 @@
 
 require_once 'PasswordHashClass.php';
 
-class xtc_pbkdf2 extends PasswordHash implements xtc_encryption_algorithm {
+abstract class xtc_pbkdf2 extends PasswordHashClass implements xtc_encryption_algorithm {
 
 	static public $PBKDF2_HASH_ALGORITHM = "sha256";
 	static public $PBKDF2_ITERATIONS     = 262144;

@@ -39,7 +39,7 @@ define("HASH_ITERATION_INDEX", 1);
 define("HASH_SALT_INDEX", 2);
 define("HASH_PBKDF2_INDEX", 3);
 
-class PasswordHash {
+class PasswordHashClass {
 
     public static function create_hash($password)
     {
@@ -101,7 +101,7 @@ class PasswordHash {
     * This implementation of PBKDF2 was originally created by https://defuse.ca
     * With improvements by http://www.variations-of-shadow.com
     */
-    private static function pbkdf2($algorithm, $password, $salt, $count, $key_length, $raw_output = false)
+    protected static function pbkdf2($algorithm, $password, $salt, $count, $key_length, $raw_output = false)
     {
         $algorithm = strtolower($algorithm);
         if(!in_array($algorithm, hash_algos(), true))
