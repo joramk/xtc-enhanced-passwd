@@ -26,10 +26,10 @@ abstract class xtc_encryption_algorithm {
 // Load required encryption algorithm classes always from same location
 require_once (strpos(DIR_WS_CLASSES, DIR_FS_DOCUMENT_ROOT) === 0 ?
 		'' : DIR_FS_DOCUMENT_ROOT) . DIR_WS_CLASSES .
-		'pbkdf2/class.xtc_pbkdf2.php';
+		'pbkdf2/xtc_pbkdf2.php';
 require_once (strpos(DIR_WS_CLASSES, DIR_FS_DOCUMENT_ROOT) === 0 ?
 		'' : DIR_FS_DOCUMENT_ROOT) . DIR_WS_CLASSES .
-		'scrypt/class.xtc_scrypt.php';
+		'scrypt/xtc_scrypt.php';
 
 class xtc_encryption_wrapper {
 
