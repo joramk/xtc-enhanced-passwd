@@ -81,7 +81,7 @@ class xtc_encryption_wrapper {
 			return self::ALGORITHM_PBKDF2;
 		} elseif (preg_match('/^\d+\$\d+\$\d+\$.+\$.+$/', $hash)) {
 			return self::ALGORITHM_SCRYPT;
-		} elseif (preg_match('/^.+\$.+\$[$./0-9A-Za-z]+$/', $hash)) {
+		} elseif (preg_match('/^.+\$.+\$[$.\/0-9A-Za-z]+$/', $hash)) {
 			return self::ALGORITHM_BCRYPT;
 		} elseif (preg_match('/^[a-f0-9]{32}$/i', $hash)) {
 			return self::ALGORITHM_MD5;
