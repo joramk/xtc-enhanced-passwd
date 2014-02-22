@@ -37,6 +37,10 @@ abstract class xtc_pbkdf2 extends PasswordHashClass implements xtc_encryption_al
 				true));
 	}
 	
+	public static function validatePassword($password, $hash) {
+		return parent::validate_password($password, $hash);
+	}
+	
 	public static function getIterations($hash = null) {
 		if (empty($hash)) {
 			return self::$PBKDF2_ITERATIONS;
