@@ -44,23 +44,23 @@ class xtc_encryption_wrapper {
 	/**
 	 * Defines the default encryption algorithm to use
 	 * 
-	 * @var type 
+	 * @var int 
 	 */
  	public static $ALGORITHM_DEFAULT = self::ALGORITHM_PBKDF2;
 	
 	/**
 	 * Defines wheter passwords get updated on validation or not
 	 * 
-	 * @var type 
+	 * @var boolean 
 	 */
 	public static $UPDATE_PASSWORDS  = true;
 	
 	/**
 	 * Creates a hash for a password for the optionally defined algorithm
 	 * 
-	 * @param type $password
-	 * @param type $algorithm
-	 * @return type
+	 * @param string $password
+	 * @param int $algorithm
+	 * @return string
 	 */
 	public static function createHash($password, $algorithm = null) {
 		$algorithm = self::checkAlgorithm($algorithm);
@@ -78,10 +78,10 @@ class xtc_encryption_wrapper {
 	/**
 	 * Validates a password against the given hash, optionally with the defined algorithm.
 	 * 
-	 * @param type $password
-	 * @param type $hash
-	 * @param type $algorithm
-	 * @return type
+	 * @param string $password
+	 * @param string $hash
+	 * @param int $algorithm
+	 * @return boolean
 	 */
 	public static function validatePassword($password, $hash, $algorithm = null) {
 		$algorithm = self::checkAlgorithm($algorithm, $hash);
@@ -99,8 +99,8 @@ class xtc_encryption_wrapper {
 	/**
 	 * Checks if a algorithm update on the given hash is needed
 	 * 
-	 * @param type $hash
-	 * @return type
+	 * @param string $hash
+	 * @return boolean
 	 */
 	public static function needsAlgorithmUpdate($hash) {
 		return self::$UPDATE_PASSWORDS && (
@@ -111,8 +111,8 @@ class xtc_encryption_wrapper {
 	/**
 	 * Detects the used algorithm for a given password hash
 	 * 
-	 * @param type $hash
-	 * @return type
+	 * @param string $hash
+	 * @return int
 	 */
 	private static function getAlgorithm($hash) {
 		if (preg_match('/^.+:\d+:.+:.+$/', $hash)) {
@@ -132,9 +132,9 @@ class xtc_encryption_wrapper {
 	/**
 	 * Gets the algorithm parameters from the given hash
 	 * 
-	 * @param type $hash
-	 * @param type $algorithm
-	 * @return int
+	 * @param string $hash
+	 * @param int $algorithm
+	 * @return string
 	 */
 	private static function getIterations($hash = null, $algorithm = null) {
 		$algorithm = self::checkAlgorithm($algorithm, $hash);
@@ -145,7 +145,7 @@ class xtc_encryption_wrapper {
 		} elseif ($algorithm == self::ALGORITHM_BCRYPT) {
 			return empty($hash) ? xtc_bcrypt::getIterations() : xtc_bcrypt::getIterations($hash);
 		} elseif ($algorithm == self::ALGORITHM_MD5) {
-			return 0;
+			return '0';
 		}
 	}
 	
@@ -153,9 +153,9 @@ class xtc_encryption_wrapper {
 	 * Checks wheter an hash or algorithm is valid and can be used for
 	 * encryption and decryption of passwords.
 	 * 
-	 * @param type $algorithm Algorithm to validate, has precedence
-	 * @param type $hash Hash to validate its algorithm
-	 * @return type True if algorithm is valid and can be used
+	 * @param int $algorithm
+	 * @param string $hash
+	 * @return boolean
 	 */
 	private static function checkAlgorithm($algorithm, $hash = null) {
 		if (empty($algorithm) && empty($hash)) {
