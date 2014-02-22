@@ -20,8 +20,8 @@ require_once 'scrypt.php';
 
 class xtc_scrypt extends Password implements xtc_encryption_algorithm {
 
-    static public $CPU_DIFFICULTY      = 16384;
-    static public $MEMORY_DIFFICULTY   = 8;
+	static public $CPU_DIFFICULTY      = 16384;
+	static public $MEMORY_DIFFICULTY   = 8;
 	static public $PARALLEL_DIFFICULTY = 1;
 	static public $SALT_LENGTH         = 8;
 

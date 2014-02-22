@@ -26,7 +26,7 @@ function xtc_RandomString($length) {
 
 function xtc_create_password($length) {
 	$min_length = is_numeric(ENTRY_PASSWORD_MIN_LENGTH) ? ENTRY_PASSWORD_MIN_LENGTH : 8;
-	$pass=xtc_RandomString($length >= $min_length ? $length : $min_length);
+	$pass=xtc_RandomString($length > $min_length ? $length : $min_length);
 	if (class_exists('xtc_encryption_wrapper')) {
 		return xtc_encryption_wrapper::createHash($pass);
 	} else {
