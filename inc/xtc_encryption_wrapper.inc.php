@@ -158,7 +158,7 @@ class xtc_encryption_wrapper {
 	 * 
 	 * @param int $algorithm
 	 * @param string $hash
-	 * @return boolean
+	 * @return int
 	 */
 	private static function checkAlgorithm($algorithm, $hash = null) {
 		if (empty($algorithm) && empty($hash)) {
@@ -171,7 +171,8 @@ class xtc_encryption_wrapper {
 					&& $algorithm != self::ALGORITHM_SCRYPT
 					&& $algorithm != self::ALGORITHM_BCRYPT) {
 				trigger_error(__CLASS__ . ':' . __FUNCTION__ .
-						':Invalid encryption algorithm defined.', E_USER_ERROR);
+						':Invalid encryption algorithm defined.',
+						E_USER_ERROR);
 			}
 			return $algorithm;
 		}
