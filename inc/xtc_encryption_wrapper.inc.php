@@ -110,8 +110,10 @@ class xtc_encryption_wrapper {
 		} elseif (empty($algorithm) && !empty($hash)) {
 			return self::getAlgorithm($hash);
 		} else {
-			if ($algorithm != self::ALGORITHM_MD5 && $algorithm != self::ALGORITHM_PBKDF2
-					&& $algorithm != self::ALGORITHM_SCRYPT) {
+			if ($algorithm != self::ALGORITHM_MD5
+					&& $algorithm != self::ALGORITHM_PBKDF2
+					&& $algorithm != self::ALGORITHM_SCRYPT
+					&& $algorithm != self::ALGORITHM_BCRYPT) {
 				trigger_error(__CLASS__ . ':' . __FUNCTION__ .
 						':Invalid encryption algorithm defined.', E_USER_ERROR);
 			}
