@@ -125,7 +125,8 @@ class xtc_encryption_wrapper {
 			return self::ALGORITHM_MD5;
 		} else {
 			trigger_error(__CLASS__ . ':' . __FUNCTION__ .
-					':Unknown encryption algorithm detected.', E_USER_ERROR);
+					':Unknown encryption algorithm detected.',
+					E_USER_ERROR);
 		}
 	}
 
