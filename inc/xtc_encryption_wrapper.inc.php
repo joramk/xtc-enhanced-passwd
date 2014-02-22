@@ -32,14 +32,14 @@ require_once (strpos(DIR_WS_CLASSES, DIR_FS_DOCUMENT_ROOT) === 0 ?
 		'scrypt/xtc_scrypt.php';
 require_once (strpos(DIR_WS_CLASSES, DIR_FS_DOCUMENT_ROOT) === 0 ?
 		'' : DIR_FS_DOCUMENT_ROOT) . DIR_WS_CLASSES .
-		'xtc_bcrypt.php';
+		'bcrypt/xtc_bcrypt.php';
 
 class xtc_encryption_wrapper {
 
 	const ALGORITHM_MD5    = 0;
-	const ALGORITHM_PBKDF2 = 1;
-	const ALGORITHM_SCRYPT = 2;
-	const ALGORITHM_BCRYPT = 3;
+	const ALGORITHM_BCRYPT = 1;
+	const ALGORITHM_PBKDF2 = 2;
+	const ALGORITHM_SCRYPT = 3;
 	
  	public static $ALGORITHM_DEFAULT = self::ALGORITHM_PBKDF2;
 	public static $UPDATE_PASSWORDS  = true;
