@@ -19,9 +19,6 @@
    Third Party contribution:
 
    guest account idea by Ingo T. <xIngox@web.de>
-   Encryption Wrapper v1.0 (c) 2014 Tenretni Marketing GmbH
-
-   Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
 include ('includes/application_top.php');
@@ -35,7 +32,8 @@ $smarty = new Smarty;
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 // include needed functions
-require_once (DIR_WS_CLASSES.'encryption_wrapper.php');
+include_once DIR_WS_CLASSES.'encryption_wrapper.php';
+require_once (DIR_FS_INC.'xtc_validate_password.inc.php');
 require_once (DIR_FS_INC.'xtc_array_to_string.inc.php');
 require_once (DIR_FS_INC.'xtc_write_user_info.inc.php');
 // redirect the customer to a friendly cookie-must-be-enabled page if cookies are disabled (or the session has not started)
@@ -55,14 +53,16 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
 	} else {
 		$check_customer = xtc_db_fetch_array($check_customer_query);
 		// Check that password is good
-		if (!xtc_encryption_wrapper::validatePassword($password, $check_customer['customers_password'])) {
+		if (!xtc_validate_password($password, $check_customer['customers_password'])) {
 			$_GET['login'] = 'fail';
 			$info_message = TEXT_LOGIN_ERROR;
 		} else {
-			if (xtc_encryption_wrapper::getMethod($check_customer['customers_password']) != xtc_encryption_wrapper::$ALGORITHM_DEFAULT
-					|| xtc_encryption_wrapper::getIterationCount($check_customer['customers_password']) != xtc_encryption_wrapper::getIterations()) {
-				xtc_db_query("UPDATE " . TABLE_CUSTOMERS . " SET customers_password = '".
-						xtc_encryption_wrapper::createHash($password) ."' WHERE customers_id='". $check_customer['customers_id'] ."'");
+			if (class_exists('xtc_encryption_wrapper')) {
+				if (xtc_encryption_wrapper::getMethod($check_customer['customers_password']) != xtc_encryption_wrapper::$ALGORITHM_DEFAULT
+						|| xtc_encryption_wrapper::getIterationCount($check_customer['customers_password']) != xtc_encryption_wrapper::getIterations()) {
+					xtc_db_query("UPDATE " . TABLE_CUSTOMERS . " SET customers_password = '".
+							xtc_encryption_wrapper::createHash($password) ."' WHERE customers_id='". $check_customer['customers_id'] ."'");
+				}
 			}
 			if (SESSION_RECREATE == 'True') {
 				xtc_session_recreate();
