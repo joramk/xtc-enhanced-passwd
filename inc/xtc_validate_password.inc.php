@@ -16,7 +16,7 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-// Load enhanced password encrpytion class
+// Load enhanced password encryption class
 include_once 'xtc_encryption_wrapper.inc.php';
 
 // This funstion validates a plain text password with an

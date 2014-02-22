@@ -16,7 +16,7 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-// Load enhanced password encrpytion class
+// Load enhanced password encryption class
 require_once 'xtc_create_password.inc.php';
 
 // This function makes a new password from a plaintext password. 
