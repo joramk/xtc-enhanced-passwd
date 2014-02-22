@@ -20,10 +20,10 @@ require_once 'PasswordHashClass.php';
 
 abstract class xtc_pbkdf2 extends PasswordHashClass implements xtc_encryption_algorithm {
 
-	static public $PBKDF2_HASH_ALGORITHM = "sha256";
-	static public $PBKDF2_ITERATIONS     = 262144;
-	static public $PBKDF2_SALT_BYTES     = 24;
-	static public $PBKDF2_HASH_BYTES     = 24;
+	public static $PBKDF2_HASH_ALGORITHM = "sha256";
+	public static $PBKDF2_ITERATIONS     = 262144;
+	public static $PBKDF2_SALT_BYTES     = 24;
+	public static $PBKDF2_HASH_BYTES     = 24;
 
 	public static function createHash($password) {
 		$salt = base64_encode(mcrypt_create_iv(self::$PBKDF2_SALT_BYTES, MCRYPT_DEV_URANDOM));

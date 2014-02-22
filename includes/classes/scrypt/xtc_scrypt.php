@@ -20,10 +20,10 @@ require_once 'scrypt.php';
 
 class xtc_scrypt extends Password implements xtc_encryption_algorithm {
 
-	static public $CPU_DIFFICULTY      = 16384;
-	static public $MEMORY_DIFFICULTY   = 8;
-	static public $PARALLEL_DIFFICULTY = 1;
-	static public $SALT_LENGTH         = 8;
+	public static $CPU_DIFFICULTY      = 65536;
+	public static $MEMORY_DIFFICULTY   = 12;
+	public static $PARALLEL_DIFFICULTY = 2;
+	public static $SALT_LENGTH         = 12;
 
     public static function createHash($password) {
 		return parent::hash($password,
