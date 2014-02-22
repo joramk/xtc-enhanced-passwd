@@ -139,11 +139,14 @@ class xtc_encryption_wrapper {
 	private static function getIterations($hash = null, $algorithm = null) {
 		$algorithm = self::checkAlgorithm($algorithm, $hash);
 		if ($algorithm == self::ALGORITHM_PBKDF2) {
-			return empty($hash) ? xtc_pbkdf2::getIterations() : xtc_pbkdf2::getIterations($hash);
+			return empty($hash) ? xtc_pbkdf2::getIterations() :
+					xtc_pbkdf2::getIterations($hash);
 		} elseif ($algorithm == self::ALGORITHM_SCRYPT) {
-			return empty($hash) ? xtc_scrypt::getIterations() : xtc_scrypt::getIterations($hash);
+			return empty($hash) ? xtc_scrypt::getIterations() :
+					xtc_scrypt::getIterations($hash);
 		} elseif ($algorithm == self::ALGORITHM_BCRYPT) {
-			return empty($hash) ? xtc_bcrypt::getIterations() : xtc_bcrypt::getIterations($hash);
+			return empty($hash) ? xtc_bcrypt::getIterations() :
+					xtc_bcrypt::getIterations($hash);
 		} elseif ($algorithm == self::ALGORITHM_MD5) {
 			return '0';
 		}
