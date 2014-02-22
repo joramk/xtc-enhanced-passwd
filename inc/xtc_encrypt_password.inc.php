@@ -17,7 +17,7 @@
    ---------------------------------------------------------------------------------------*/
 
 // Load enhanced password encrpytion class
-include_once DIR_WS_CLASSES.'encryption_wrapper.php';
+include_once 'xtc_encryption_wrapper.inc.php';
 require_once 'xtc_create_password.inc.php';
 
 // This function makes a new password from a plaintext password. 

@@ -32,7 +32,6 @@ $smarty = new Smarty;
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 // include needed functions
-include_once DIR_WS_CLASSES.'encryption_wrapper.php';
 require_once (DIR_FS_INC.'xtc_validate_password.inc.php');
 require_once (DIR_FS_INC.'xtc_array_to_string.inc.php');
 require_once (DIR_FS_INC.'xtc_write_user_info.inc.php');

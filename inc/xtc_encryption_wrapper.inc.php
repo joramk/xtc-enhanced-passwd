@@ -23,8 +23,13 @@ abstract class xtc_encryption_algorithm {
 	public function getIterations();
 }
 
-require_once 'pbkdf2/class.xtc_pbkdf2.php';
-require_once 'scrypt/class.xtc_scrypt.php';
+// Load required encryption algorithm classes always from same location
+require_once (strpos(DIR_WS_CLASSES, DIR_FS_DOCUMENT_ROOT) === 0 ?
+		'' : DIR_FS_DOCUMENT_ROOT) . DIR_WS_CLASSES .
+		'pbkdf2/class.xtc_pbkdf2.php';
+require_once (strpos(DIR_WS_CLASSES, DIR_FS_DOCUMENT_ROOT) === 0 ?
+		'' : DIR_FS_DOCUMENT_ROOT) . DIR_WS_CLASSES .
+		'scrypt/class.xtc_scrypt.php';
 
 class xtc_encryption_wrapper {
 
@@ -33,6 +38,7 @@ class xtc_encryption_wrapper {
 	const ALGORITHM_SCRYPT  = 2;
 	
  	public static $ALGORITHM_DEFAULT = self::ALGORITHM_PBKDF2;
+	public static $UPDATE_PASSWORDS  = true;
 	
 	public static function createHash($password, $algorithm = null) {
 		$algorithm = self::checkAlgorithm($algorithm);
@@ -57,8 +63,9 @@ class xtc_encryption_wrapper {
 	}
 	
 	public static function needsAlgorithmUpdate($hash) {
-		return self::getAlgorithm($hash) != self::$ALGORITHM_DEFAULT
-				|| self::getIterations($hash) != self::getIterations();
+		return self::$UPDATE_PASSWORDS && (
+				self::getAlgorithm($hash) != self::$ALGORITHM_DEFAULT
+				|| self::getIterations($hash) != self::getIterations());
 	}
 
 	private static function getAlgorithm($hash) {
