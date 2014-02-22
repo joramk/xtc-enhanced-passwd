@@ -17,7 +17,7 @@
    ---------------------------------------------------------------------------------------*/
 
 // Load enhanced password encrpytion class
-include_once 'xtc_encryption_wrapper.php';
+include_once 'xtc_encryption_wrapper.inc.php';
 
 // This funstion validates a plain text password with an
  // encrpyted password
