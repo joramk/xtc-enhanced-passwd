@@ -16,32 +16,34 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-// secure hashing of passwords using bcrypt, needs PHP 5.3+
+// secure hashing of passwords using bcrypt with phpass for portability
 // see http://codahale.com/how-to-safely-store-a-password/
+// and http://www.openwall.com/phpass/
+
+require_once 'PasswordHash.php';
 
 class xtc_bcrypt implements xtc_encryption_algorithm {
 
-	public static $ALGORITHM_SELECTOR = CRYPT_BLOWFISH;
-	public static $ALGORITHM_WORKLOAD = 12;
+	public static $ALGORITHM_ITERATION_COUNT     = 8;
+	public static $ALGORITHM_ALLOW_WEAK_FALLBACK = false;
 	
 	public static function createHash($password) {
-		$salt = substr(str_replace('+', '.',
-				base64_encode(sha1(microtime(true), true))), 0, 22);
-		return crypt($password, '$'. self::$ALGORITHM_SELECTOR .
-				'$'. self::$ALGORITHM_WORKLOAD . '$' . $salt);
+		$hasher = new PasswordHash(self::$ALGORITHM_ITERATION_COUNT,
+				self::$ALGORITHM_ALLOW_WEAK_FALLBACK);
+		return $hasher->HashPassword($password);
 	}
 	
 	public static function validatePassword($password, $hash) {
-		return $hash == crypt($password, $hash);
+		$hasher = new PasswordHash(self::$ALGORITHM_ITERATION_COUNT,
+				self::$ALGORITHM_ALLOW_WEAK_FALLBACK);
+		return $hasher->CheckPassword($password, $hash);
 	}
 	
 	public static function getIterations($hash = null) {
 		if (empty($hash)) {
-		return self::$ALGORITHM_SELECTOR .
-				'$'. self::$ALGORITHM_WORKLOAD;
+		return self::$ALGORITHM_ITERATION_COUNT;
 		} else {
-			list( , $s, $w) = explode('$', $hash);
-			return $s . '$' . $w;
+			return 0;
 		}
 	}
 }
