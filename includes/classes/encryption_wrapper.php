@@ -17,7 +17,7 @@
    ---------------------------------------------------------------------------------------*/
 
 abstract class xtc_encryption_algorithm {
-	
+
 	public function createHash();
 	public function validatePassword();
 	public function getIterations();
@@ -27,7 +27,7 @@ require_once 'pbkdf2/class.xtc_pbkdf2.php';
 require_once 'scrypt/class.xtc_scrypt.php';
 
 class xtc_encryption_wrapper {
-	
+
 	const ALGORITHM_MD5     = 0;
 	const ALGORITHM_PBKDF2  = 1;
 	const ALGORITHM_SCRYPT  = 2;
@@ -73,18 +73,7 @@ class xtc_encryption_wrapper {
 					':Unknown encryption algorithm detected.', E_USER_ERROR);
 		}
 	}
-/*	
-	private static function getIterationCount($hash, $algorithm = null) {
-		$algorithm = self::checkAlgorithm($algorithm, $hash);
-		if ($algorithm == self::ALGORITHM_PBKDF2) {
-			return xtc_pbkdf2::getIterationCount($hash);
-		} elseif ($algorithm == self::ALGORITHM_SCRYPT) {
-			return xtc_scrypt::getIterationCount($hash);
-		} elseif ($algorithm == self::ALGORITHM_MD5) {
-			return 0;
-		}
-	}
-*/	
+
 	private static function getIterations($hash = null, $algorithm = null) {
 		$algorithm = self::checkAlgorithm($algorithm, $hash);
 		if ($algorithm == self::ALGORITHM_PBKDF2) {
