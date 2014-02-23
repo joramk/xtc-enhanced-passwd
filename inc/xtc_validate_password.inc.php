@@ -20,10 +20,10 @@
 include_once 'xtc_encryption_wrapper.inc.php';
 
 /**
- * This funstion validates a plain text password against an encrpyted password
+ * This function validates a plain text password against an encrypted password
  * 
- * @param type $plain
- * @param type $encrypted
+ * @param string $plain
+ * @param string $encrypted
  * @return boolean
  */
 function xtc_validate_password($plain, $encrypted) {

@@ -23,8 +23,8 @@ require_once 'xtc_create_password.inc.php';
 /**
  * This function generates a new password hash for a given plaintext password.
  * 
- * @param type $plain
- * @return type
+ * @param string $plain
+ * @return string
  */
 function xtc_encrypt_password($plain) {
 	if (empty($plain)) {
