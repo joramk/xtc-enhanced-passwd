@@ -198,7 +198,7 @@ class xtc_encryption_wrapper {
 			return self::ALGORITHM_MD5;
 		} else {
 			trigger_error(__CLASS__ . '::' . __FUNCTION__ .
-					' Unknown encryption algorithm detected.',
+					' - Unknown encryption algorithm detected',
 					E_USER_ERROR);
 		}
 	}
@@ -216,7 +216,7 @@ class xtc_encryption_wrapper {
 				&& $algorithm != self::ALGORITHM_SHA1SALT
 				&& $algorithm != self::ALGORITHM_MD5) {
 			trigger_error(__CLASS__ . '::' . __FUNCTION__ .
-					' Invalid encryption algorithm defined.',
+					' - Invalid encryption algorithm defined',
 					E_USER_ERROR);
 		}
 	}
@@ -229,7 +229,7 @@ class xtc_encryption_wrapper {
 		if(self::$ALGORITHM_DEFAULT == self::ALGORITHM_MD5 ||
 				self::$ALGORITHM_DEFAULT == self::ALGORITHM_SHA1SALT) {
 			trigger_error(__CLASS__ . '::' . __FUNCTION__ .
-					' Insecure default encryption algorithm defined.',
+					' - Insecure default encryption algorithm defined',
 					E_USER_WARNING);
 		}
 	}
