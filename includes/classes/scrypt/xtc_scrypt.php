@@ -22,7 +22,7 @@ class xtc_scrypt extends Password implements xtc_encryption_algorithm {
 
 	public static $CPU_DIFFICULTY      = 65536;
 	public static $MEMORY_DIFFICULTY   = 12;
-	public static $PARALLEL_DIFFICULTY = 2;
+	public static $PARALLEL_DIFFICULTY = 4;
 	public static $SALT_LENGTH         = 12;
 
     public static function createHash($password) {

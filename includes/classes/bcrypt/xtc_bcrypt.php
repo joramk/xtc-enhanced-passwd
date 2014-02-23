@@ -24,7 +24,7 @@ require_once 'PasswordHash.php';
 
 class xtc_bcrypt implements xtc_encryption_algorithm {
 
-	public static $ALGORITHM_ITERATION_COUNT     = 8;     // valid values are 4 to 31
+	public static $ALGORITHM_ITERATION_COUNT     = 12;     // valid values are 4 to 31
 	public static $ALGORITHM_ALLOW_WEAK_FALLBACK = false;
 	
 	public static function createHash($password) {
