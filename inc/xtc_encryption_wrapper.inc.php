@@ -63,15 +63,15 @@ class xtc_encryption_wrapper {
 	 * @return string
 	 */
 	public static function createHash($password, $algorithm = null) {
-		$algorithm = self::checkAlgorithm($algorithm);
-		if ($algorithm == self::ALGORITHM_PBKDF2) {
-			return xtc_pbkdf2::createHash($password);
-		} elseif ($algorithm == self::ALGORITHM_SCRYPT) {
-			return xtc_scrypt::createHash($password);
-		} elseif ($algorithm == self::ALGORITHM_BCRYPT) {
-			return xtc_bcrypt::createHash($password);
-		} elseif ($algorithm == self::ALGORITHM_MD5) {
-			return md5($password);
+		switch (self::checkAlgorithm($algorithm)) {
+			case self::ALGORITHM_PBKDF2:
+				return xtc_pbkdf2::createHash($password);
+			case self::ALGORITHM_SCRYPT:
+				return xtc_scrypt::createHash($password);
+			case self::ALGORITHM_BCRYPT:
+				return xtc_bcrypt::createHash($password);
+			case self::ALGORITHM_MD5:
+				return md5($password);
 		}
 	}
 	
@@ -84,15 +84,15 @@ class xtc_encryption_wrapper {
 	 * @return boolean
 	 */
 	public static function validatePassword($password, $hash, $algorithm = null) {
-		$algorithm = self::checkAlgorithm($algorithm, $hash);
-		if ($algorithm == self::ALGORITHM_PBKDF2) {
-			return xtc_pbkdf2::validatePassword($password, $hash);
-		} elseif ($algorithm == self::ALGORITHM_SCRYPT) {
-			return xtc_scrypt::validatePassword($password, $hash);
-		} elseif ($algorithm == self::ALGORITHM_BCRYPT) {
-			return xtc_bcrypt::validatePassword($password, $hash);
-		} elseif ($algorithm == self::ALGORITHM_MD5) {
-			return md5($password) == $hash;
+		switch (self::checkAlgorithm($algorithm, $hash)) {
+			case self::ALGORITHM_PBKDF2:
+				return xtc_pbkdf2::validatePassword($password, $hash);
+			case self::ALGORITHM_SCRYPT:
+				return xtc_scrypt::validatePassword($password, $hash);
+			case self::ALGORITHM_BCRYPT:
+				return xtc_bcrypt::validatePassword($password, $hash);
+			case self::ALGORITHM_MD5:
+				return md5($password) === $hash;
 		}
 	}
 	
@@ -138,18 +138,18 @@ class xtc_encryption_wrapper {
 	 * @return string
 	 */
 	private static function getIterations($hash = null, $algorithm = null) {
-		$algorithm = self::checkAlgorithm($algorithm, $hash);
-		if ($algorithm == self::ALGORITHM_PBKDF2) {
-			return empty($hash) ? xtc_pbkdf2::getIterations() :
-					xtc_pbkdf2::getIterations($hash);
-		} elseif ($algorithm == self::ALGORITHM_SCRYPT) {
-			return empty($hash) ? xtc_scrypt::getIterations() :
-					xtc_scrypt::getIterations($hash);
-		} elseif ($algorithm == self::ALGORITHM_BCRYPT) {
-			return empty($hash) ? xtc_bcrypt::getIterations() :
-					xtc_bcrypt::getIterations($hash);
-		} elseif ($algorithm == self::ALGORITHM_MD5) {
-			return '0';
+		switch (self::checkAlgorithm($algorithm, $hash)) {
+			case self::ALGORITHM_PBKDF2:
+				return empty($hash) ? xtc_pbkdf2::getIterations() :
+						xtc_pbkdf2::getIterations($hash);
+			case self::ALGORITHM_SCRYPT:
+				return empty($hash) ? xtc_scrypt::getIterations() :
+						xtc_scrypt::getIterations($hash);
+			case self::ALGORITHM_BCRYPT:
+				return empty($hash) ? xtc_bcrypt::getIterations() :
+						xtc_bcrypt::getIterations($hash);
+			default:
+				return '0';
 		}
 	}
 	
