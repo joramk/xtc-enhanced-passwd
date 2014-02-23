@@ -2,7 +2,7 @@
 
 
 /* -----------------------------------------------------------------------------------------
-   $Id: login.php 1143 2005-08-11 11:58:59Z gwinger $   
+   $Id: login.php 4228 2013-01-11 10:43:51Z gtb-modified $   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -39,6 +39,7 @@ require_once (DIR_FS_INC.'xtc_write_user_info.inc.php');
 if ($session_started == false) {
 	xtc_redirect(xtc_href_link(FILENAME_COOKIE_USAGE));
 }
+$info_message = false; //DokuMan - 2010-02-28 - set undefined variable
 
 if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
 	$email_address = xtc_db_prepare_input($_POST['email_address']);
@@ -84,13 +85,24 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
 			// restore cart contents
 			$_SESSION['cart']->restore_contents();
 			
-			if (is_object($econda)) $econda->_loginUser();
-
-			if ($_SESSION['cart']->count_contents() > 0) {
-				xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
+			if (is_object($econda)) $econda->_loginUser();			
+      
+      // BOC added request for set review_prod_id and for order_id, noRiddle
+      /*if ($_SESSION['cart']->count_contents() > 0) {				
+				xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART),'NONSSL');
 			} else {
-				xtc_redirect(xtc_href_link(FILENAME_DEFAULT));
-			}
+        xtc_redirect(xtc_href_link(FILENAME_DEFAULT),'NONSSL');        
+      }*/
+			if ($_SESSION['cart']->count_contents() > 0  && !isset($_GET['review_prod_id'])  && !isset($_GET['order_id'])) {
+			  xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART),'NONSSL');
+      } elseif (isset($_GET['review_prod_id'])) {
+          xtc_redirect(xtc_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, xtc_product_link((int)$_GET['review_prod_id'],''), 'NONSSL'));
+      } elseif (isset($_GET['order_id'])) {
+          xtc_redirect(xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' .(int)$_GET['order_id'], 'NONSSL'));
+      } else {         
+        xtc_redirect(xtc_href_link(FILENAME_DEFAULT),'NONSSL');          
+      }
+      // EOC added request for set review_prod_id and for order_id, noRiddle
 
 		}
 	}
@@ -99,13 +111,24 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
 $breadcrumb->add(NAVBAR_TITLE_LOGIN, xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
 require (DIR_WS_INCLUDES.'header.php');
 
-//if ($_GET['info_message']) $info_message = $_GET['info_message'];
+if (isset($_GET['info_message'])) $info_message = $_GET['info_message'];
 $smarty->assign('info_message', $info_message);
 $smarty->assign('account_option', ACCOUNT_OPTIONS);
 $smarty->assign('BUTTON_NEW_ACCOUNT', '<a href="'.xtc_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL').'">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');
 $smarty->assign('BUTTON_LOGIN', xtc_image_submit('button_login.gif', IMAGE_BUTTON_LOGIN));
 $smarty->assign('BUTTON_GUEST', '<a href="'.xtc_href_link(FILENAME_CREATE_GUEST_ACCOUNT, '', 'SSL').'">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');
-$smarty->assign('FORM_ACTION', xtc_draw_form('login', xtc_href_link(FILENAME_LOGIN, 'action=process', 'SSL')));
+
+// BOC added review_prod_id to be able to redirect to product_reviews_write when coming from reviews button, and order_id to redirect to account_history_info when coming from Link in change_order_mail, noRiddle
+//$smarty->assign('FORM_ACTION', xtc_draw_form('login', xtc_href_link(FILENAME_LOGIN, 'action=process', 'SSL')));
+if(isset($_GET['review_prod_id'])) {
+  $smarty->assign('FORM_ACTION', xtc_draw_form('login', xtc_href_link(FILENAME_LOGIN, 'action=process&review_prod_id='.(int)$_GET['review_prod_id'], 'SSL')));
+} elseif (isset($_GET['order_id'])) {
+  $smarty->assign('FORM_ACTION', xtc_draw_form('login', xtc_href_link(FILENAME_LOGIN, 'action=process&order_id='.(int)$_GET['order_id'], 'SSL')));
+} else {
+  $smarty->assign('FORM_ACTION', xtc_draw_form('login', xtc_href_link(FILENAME_LOGIN, 'action=process', 'SSL')));
+}
+// EOC added review_prod_id and order_id, noRiddle
+
 $smarty->assign('INPUT_MAIL', xtc_draw_input_field('email_address'));
 $smarty->assign('INPUT_PASSWORD', xtc_draw_password_field('password'));
 $smarty->assign('LINK_LOST_PASSWORD', xtc_href_link(FILENAME_PASSWORD_DOUBLE_OPT, '', 'SSL'));
@@ -118,7 +141,7 @@ $smarty->assign('main_content', $main_content);
 
 $smarty->assign('language', $_SESSION['language']);
 $smarty->caching = 0;
-if (!defined(RM))
+if (!defined('RM'))
 	$smarty->load_filter('output', 'note');
 $smarty->display(CURRENT_TEMPLATE.'/index.html');
 include ('includes/application_bottom.php');
