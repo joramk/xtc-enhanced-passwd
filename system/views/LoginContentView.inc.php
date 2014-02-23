@@ -73,13 +73,13 @@ class LoginContentView extends ContentView
 						}						
 					}
 
-					// update password in database hash if necessary
+					// update password hash in database if necessary - see inc/xtc_encryption_wrapper.inc.php
 					if ($t_valid_password === true && class_exists('xtc_encryption_wrapper') &&
 							xtc_encryption_wrapper::needsAlgorithmUpdate(empty($t_result_array) ?
-									$check_customer['customers_password'] : $t_result_array['customers_password'])) {
-						xtc_db_query("UPDATE " . TABLE_CUSTOMERS . " SET customers_password = '".
-									xtc_encryption_wrapper::createHash($password) ."' WHERE customers_id='" .
-									empty($t_result_array) ? $check_customer['customers_id'] : 1 ."'");
+							$check_customer['customers_password'] : $t_result_array['customers_password'])) {
+						xtc_db_query("UPDATE " . TABLE_CUSTOMERS . " SET customers_password = '" .
+								xtc_encryption_wrapper::createHash($password) . "' WHERE customers_id='" .
+								(empty($t_result_array) ? $check_customer['customers_id'] : 1) . "'");
 					}
 					
 					if ($t_valid_password === false) {
