@@ -58,10 +58,11 @@ require_once (strpos(DIR_WS_CLASSES, DIR_FS_DOCUMENT_ROOT) === 0 ?
 
 class xtc_encryption_wrapper {
 
-	const ALGORITHM_MD5    = 0;
-	const ALGORITHM_BCRYPT = 1;
-	const ALGORITHM_PBKDF2 = 2;
-	const ALGORITHM_SCRYPT = 3;
+	const ALGORITHM_MD5      = 0;
+	const ALGORITHM_SHA1SALT = 1;
+	const ALGORITHM_BCRYPT   = 2;
+	const ALGORITHM_PBKDF2   = 3;
+	const ALGORITHM_SCRYPT   = 4;
 
 	/**
 	 * Defines the default encryption algorithm to use.
@@ -94,6 +95,8 @@ class xtc_encryption_wrapper {
 				return xtc_bcrypt::createHash($password);
 			case self::ALGORITHM_MD5:
 				return md5($password);
+			case self::ALGORITHM_SHA1SALT:
+				return sha1($password . SALT_KEY);
 		}
 	}
 
@@ -114,6 +117,8 @@ class xtc_encryption_wrapper {
 				return xtc_scrypt::validatePassword($password, $hash);
 			case self::ALGORITHM_BCRYPT:
 				return xtc_bcrypt::validatePassword($password, $hash);
+			case self::ALGORITHM_SHA1SALT:
+				return sha1($password . SALT_KEY) === $hash;
 			case self::ALGORITHM_MD5:
 				return md5($password) === $hash;
 		}
@@ -186,6 +191,8 @@ class xtc_encryption_wrapper {
 			return self::ALGORITHM_SCRYPT;
 		} elseif (preg_match('/^.+\$.+\$[$.\/0-9A-Za-z]+$/', $hash)) {
 			return self::ALGORITHM_BCRYPT;
+		} elseif (preg_match('/^[a-f0-9]{40}$/i', $hash)) {
+			return self::ALGORITHM_SHA1SALT;
 		} elseif (preg_match('/^[a-f0-9]{32}$/i', $hash)) {
 			return self::ALGORITHM_MD5;
 		} else {
@@ -205,6 +212,7 @@ class xtc_encryption_wrapper {
 		if ($algorithm != self::ALGORITHM_PBKDF2
 				&& $algorithm != self::ALGORITHM_SCRYPT
 				&& $algorithm != self::ALGORITHM_BCRYPT
+				&& $algorithm != self::ALGORITHM_SHA1SALT
 				&& $algorithm != self::ALGORITHM_MD5) {
 			trigger_error(__CLASS__ . '::' . __FUNCTION__ .
 					' Invalid encryption algorithm defined.',
