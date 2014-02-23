@@ -39,11 +39,12 @@ class xtc_bcrypt implements xtc_encryption_algorithm {
 		return $hasher->CheckPassword($password, $hash);
 	}
 	
-	public static function getIterations($hash = null) {
+	public static function getParameters($hash = null) {
 		if (empty($hash)) {
-		return self::$ALGORITHM_ITERATION_COUNT;
+			return self::$ALGORITHM_ITERATION_COUNT;
 		} else {
-			return 0;
+	        list ($P, $r) = explode('$', $hash);
+			return $P . '$' . $r;
 		}
 	}
 }

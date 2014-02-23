@@ -37,7 +37,7 @@ class xtc_scrypt extends Password implements xtc_encryption_algorithm {
 		return parent::check($password, $hash);
 	}
 	
-	public static function getIterations($hash = null) {
+	public static function getParameters($hash = null) {
 		if (!empty($hash)) {
 			$N = self::$CPU_DIFFICULTY;
 			$r = self::$MEMORY_DIFFICULTY;

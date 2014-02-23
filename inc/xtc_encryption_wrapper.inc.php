@@ -18,9 +18,20 @@
 
 interface xtc_encryption_algorithm {
 
+	/**
+	 * Creates a password hash
+	 */
 	static function createHash($password);
+	
+	/**
+	 * Validates a password against a password hash
+	 */
 	static function validatePassword($password, $hash);
-	static function getIterations($hash = null);
+	
+	/**
+	 * Gets the encrpytion parameters used to generate the hash
+	 */
+	static function getParameters($hash = null);
 }
 
 // Load required encryption algorithm classes always from same location
@@ -105,7 +116,7 @@ class xtc_encryption_wrapper {
 	public static function needsAlgorithmUpdate($hash) {
 		return self::$UPDATE_PASSWORDS && (
 				self::getAlgorithm($hash) != self::$ALGORITHM_DEFAULT
-				|| self::getIterations($hash) != self::getIterations());
+				|| self::getParameters($hash) != self::getParameters());
 	}
 
 	/**
@@ -115,19 +126,19 @@ class xtc_encryption_wrapper {
 	 * @param int $algorithm
 	 * @return string
 	 */
-	private static function getIterations($hash = null, $algorithm = null) {
+	private static function getParameters($hash = null, $algorithm = null) {
 		switch (self::checkAlgorithm($algorithm, $hash)) {
 			case self::ALGORITHM_PBKDF2:
-				return empty($hash) ? xtc_pbkdf2::getIterations() :
-						xtc_pbkdf2::getIterations($hash);
+				return empty($hash) ? xtc_pbkdf2::getParameters() :
+						xtc_pbkdf2::getParameters($hash);
 			case self::ALGORITHM_SCRYPT:
-				return empty($hash) ? xtc_scrypt::getIterations() :
-						xtc_scrypt::getIterations($hash);
+				return empty($hash) ? xtc_scrypt::getParameters() :
+						xtc_scrypt::getParameters($hash);
 			case self::ALGORITHM_BCRYPT:
-				return empty($hash) ? xtc_bcrypt::getIterations() :
-						xtc_bcrypt::getIterations($hash);
+				return empty($hash) ? xtc_bcrypt::getParameters() :
+						xtc_bcrypt::getParameters($hash);
 			default:
-				return '0';
+				return '';
 		}
 	}
 	
