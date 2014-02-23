@@ -1,6 +1,6 @@
 <?php
 /*---------------------------------------------------------------------------
-   $Id: encryption_wrapper.php,v 1.0 
+   $Id: xtc_encrypt_password.inc.php 1cf1e3f88d62 2014-02-22 20:13:21Z joramk $   
 
    Contribution for XT-Commerce http://www.xt-commerce.com
    by Tenretni Marketing GmbH http://www.tenretni-marketing.de
@@ -126,8 +126,8 @@ class xtc_encryption_wrapper {
 	 * @return boolean
 	 */
 	public static function needsAlgorithmUpdate($hash) {
-		return self::$UPDATE_PASSWORDS && (
-				self::getAlgorithm($hash) != self::$ALGORITHM_DEFAULT
+		return self::$UPDATE_PASSWORDS &&
+				(self::getAlgorithm($hash) != self::$ALGORITHM_DEFAULT
 				|| self::getParameters($hash) != self::getParameters());
 	}
 

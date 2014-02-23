@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_validate_password.inc.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id: xtc_validate_password.inc.php 933158644dcb 2014-02-22 20:14:19Z joramk $   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -19,8 +19,13 @@
 // Load enhanced password encryption class
 include_once 'xtc_encryption_wrapper.inc.php';
 
-// This funstion validates a plain text password with an
- // encrpyted password
+/**
+ * This funstion validates a plain text password against an encrpyted password
+ * 
+ * @param type $plain
+ * @param type $encrypted
+ * @return boolean
+ */
 function xtc_validate_password($plain, $encrypted) {
 	if (xtc_not_null($plain) && xtc_not_null($encrypted)) {
 		if (class_exists('xtc_encryption_wrapper')) {

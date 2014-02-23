@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_encrypt_password.inc.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id: xtc_encrypt_password.inc.php 933158644dcb 2014-02-22 20:13:21Z joramk $   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -19,7 +19,13 @@
 // Load enhanced password encryption class
 require_once 'xtc_create_password.inc.php';
 
-// This function makes a new password from a plaintext password. 
+
+/**
+ * This function generates a new password hash for a given plaintext password.
+ * 
+ * @param type $plain
+ * @return type
+ */
 function xtc_encrypt_password($plain) {
 	if (empty($plain)) {
 		$plain = xtc_create_password(ENTRY_PASSWORD_MIN_LENGTH);
