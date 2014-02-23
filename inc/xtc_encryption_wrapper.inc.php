@@ -1,12 +1,12 @@
 <?php
-/*------------------------------------------------------------------------------
+/*---------------------------------------------------------------------------
    $Id: encryption_wrapper.php,v 1.0 
 
    Contribution for XT-Commerce http://www.xt-commerce.com
    by Tenretni Marketing GmbH http://www.tenretni-marketing.de
 
    Copyright 2014 Tenretni Marketing GmbH
-   -----------------------------------------------------------------------------------------
+   --------------------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce www.oscommerce.com 
@@ -14,27 +14,38 @@
    (c) 2003 XT-Commerce
 
    Released under the GNU General Public License 
-   ---------------------------------------------------------------------------------------*/
+   ---------------------------------------------------------------------------*/
 
 interface xtc_encryption_algorithm {
 
 	/**
-	 * Creates a password hash
+	 * Creates a password hash for the given plaintext password.
+	 * 
+	 * @param string $password
+	 * @return string
 	 */
 	static function createHash($password);
 	
 	/**
-	 * Validates a password against a password hash
+	 * Validates a password against a password hash and returns the result.
+	 * 
+	 * @param string $password
+	 * @param string $hash
+	 * @return boolean
 	 */
 	static function validatePassword($password, $hash);
 	
 	/**
-	 * Gets the encrpytion parameters used to generate the hash
+	 * Gets the crrent default encryption parameters
+	 * or the parameters used to generate the optionally given hash.
+	 * 
+	 * @param string $hash
+	 * @return string
 	 */
 	static function getParameters($hash = null);
 }
 
-// Load required encryption algorithm classes always from same location
+// Load required encryption algorithm classes always from same location.
 require_once (strpos(DIR_WS_CLASSES, DIR_FS_DOCUMENT_ROOT) === 0 ?
 		'' : DIR_FS_DOCUMENT_ROOT) . DIR_WS_CLASSES .
 		'pbkdf2/xtc_pbkdf2.php';
@@ -53,21 +64,21 @@ class xtc_encryption_wrapper {
 	const ALGORITHM_SCRYPT = 3;
 	
 	/**
-	 * Defines the default encryption algorithm to use
+	 * Defines the default encryption algorithm to use.
 	 * 
 	 * @var int 
 	 */
  	public static $ALGORITHM_DEFAULT = self::ALGORITHM_PBKDF2;
 	
 	/**
-	 * Defines wheter passwords get updated on validation or not
+	 * Defines wheter passwords get updated on validation or not.
 	 * 
 	 * @var boolean 
 	 */
 	public static $UPDATE_PASSWORDS  = true;
 	
 	/**
-	 * Creates a hash for a password for the optionally defined algorithm
+	 * Creates a hash for a password for the optionally defined algorithm.
 	 * 
 	 * @param string $password
 	 * @param int $algorithm
@@ -87,7 +98,8 @@ class xtc_encryption_wrapper {
 	}
 	
 	/**
-	 * Validates a password against the given hash, optionally with the defined algorithm.
+	 * Validates a password against the given hash,
+	 * optionally with the defined algorithm.
 	 * 
 	 * @param string $password
 	 * @param string $hash
@@ -108,7 +120,7 @@ class xtc_encryption_wrapper {
 	}
 	
 	/**
-	 * Checks if a algorithm update on the given hash is needed
+	 * Checks if a algorithm update on the given hash is needed.
 	 * 
 	 * @param string $hash
 	 * @return boolean
@@ -120,7 +132,7 @@ class xtc_encryption_wrapper {
 	}
 
 	/**
-	 * Gets the algorithm parameters from the given hash
+	 * Gets the algorithm parameters from the given hash.
 	 * 
 	 * @param string $hash
 	 * @param int $algorithm
@@ -162,7 +174,7 @@ class xtc_encryption_wrapper {
 	}
 	
 	/**
-	 * Detects the used algorithm for a given password hash
+	 * Detects the used algorithm for a given password hash.
 	 * 
 	 * @param string $hash
 	 * @return int
@@ -177,8 +189,8 @@ class xtc_encryption_wrapper {
 		} elseif (preg_match('/^[a-f0-9]{32}$/i', $hash)) {
 			return self::ALGORITHM_MD5;
 		} else {
-			trigger_error(__CLASS__ . ':' . __FUNCTION__ .
-					':Unknown encryption algorithm detected.',
+			trigger_error(__CLASS__ . '::' . __FUNCTION__ .
+					' Unknown encryption algorithm detected.',
 					E_USER_ERROR);
 		}
 	}
@@ -190,12 +202,12 @@ class xtc_encryption_wrapper {
 	 * @param type $algorithm
 	 */
 	private static function validateAlgorithm($algorithm) {
-		if ($algorithm != self::ALGORITHM_MD5
-				&& $algorithm != self::ALGORITHM_PBKDF2
+		if ($algorithm != self::ALGORITHM_PBKDF2
 				&& $algorithm != self::ALGORITHM_SCRYPT
-				&& $algorithm != self::ALGORITHM_BCRYPT) {
-			trigger_error(__CLASS__ . ':' . __FUNCTION__ .
-					':Invalid encryption algorithm defined.',
+				&& $algorithm != self::ALGORITHM_BCRYPT
+				&& $algorithm != self::ALGORITHM_MD5) {
+			trigger_error(__CLASS__ . '::' . __FUNCTION__ .
+					' Invalid encryption algorithm defined.',
 					E_USER_ERROR);
 		}
 	}
