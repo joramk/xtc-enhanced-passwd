@@ -43,7 +43,7 @@ class xtc_bcrypt implements xtc_encryption_algorithm {
 		if (empty($hash)) {
 			return self::$ALGORITHM_ITERATION_COUNT;
 		} else {
-	        list ($P, $r) = explode('$', $hash);
+			list ($P, $r) = explode('$', $hash);
 			return $P . '$' . $r;
 		}
 	}

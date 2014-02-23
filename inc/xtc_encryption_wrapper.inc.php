@@ -25,7 +25,7 @@ interface xtc_encryption_algorithm {
 	 * @return string
 	 */
 	static function createHash($password);
-	
+
 	/**
 	 * Validates a password against a password hash and returns the result.
 	 * 
@@ -34,7 +34,7 @@ interface xtc_encryption_algorithm {
 	 * @return boolean
 	 */
 	static function validatePassword($password, $hash);
-	
+
 	/**
 	 * Gets the crrent default encryption parameters
 	 * or the parameters used to generate the optionally given hash.
@@ -62,21 +62,21 @@ class xtc_encryption_wrapper {
 	const ALGORITHM_BCRYPT = 1;
 	const ALGORITHM_PBKDF2 = 2;
 	const ALGORITHM_SCRYPT = 3;
-	
+
 	/**
 	 * Defines the default encryption algorithm to use.
 	 * 
 	 * @var int 
 	 */
  	public static $ALGORITHM_DEFAULT = self::ALGORITHM_PBKDF2;
-	
+
 	/**
 	 * Defines wheter passwords get updated on validation or not.
 	 * 
 	 * @var boolean 
 	 */
 	public static $UPDATE_PASSWORDS  = true;
-	
+
 	/**
 	 * Creates a hash for a password for the optionally defined algorithm.
 	 * 
@@ -96,7 +96,7 @@ class xtc_encryption_wrapper {
 				return md5($password);
 		}
 	}
-	
+
 	/**
 	 * Validates a password against the given hash,
 	 * optionally with the defined algorithm.
@@ -118,7 +118,7 @@ class xtc_encryption_wrapper {
 				return md5($password) === $hash;
 		}
 	}
-	
+
 	/**
 	 * Checks if a algorithm update on the given hash is needed.
 	 * 
@@ -153,7 +153,7 @@ class xtc_encryption_wrapper {
 				return '';
 		}
 	}
-	
+
 	/**
 	 * Checks wheter an hash or algorithm is valid and can be used for
 	 * encryption and decryption of passwords.
@@ -172,7 +172,7 @@ class xtc_encryption_wrapper {
 			return $algorithm;
 		}
 	}
-	
+
 	/**
 	 * Detects the used algorithm for a given password hash.
 	 * 

@@ -43,7 +43,7 @@ class xtc_scrypt extends Password implements xtc_encryption_algorithm {
 			$r = self::$MEMORY_DIFFICULTY;
 			$p = self::$PARALLEL_DIFFICULTY;
 		} else {
-	        list ($N, $r, $p) = explode('$', $hash);
+			list ($N, $r, $p) = explode('$', $hash);
 		}
 		return $N . '$' . $r . '$' . $p;
 	}
