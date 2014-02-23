@@ -109,28 +109,6 @@ class xtc_encryption_wrapper {
 	}
 
 	/**
-	 * Detects the used algorithm for a given password hash
-	 * 
-	 * @param string $hash
-	 * @return int
-	 */
-	private static function getAlgorithm($hash) {
-		if (preg_match('/^.+:\d+:.+:.+$/', $hash)) {
-			return self::ALGORITHM_PBKDF2;
-		} elseif (preg_match('/^\d+\$\d+\$\d+\$.+\$.+$/', $hash)) {
-			return self::ALGORITHM_SCRYPT;
-		} elseif (preg_match('/^.+\$.+\$[$.\/0-9A-Za-z]+$/', $hash)) {
-			return self::ALGORITHM_BCRYPT;
-		} elseif (preg_match('/^[a-f0-9]{32}$/i', $hash)) {
-			return self::ALGORITHM_MD5;
-		} else {
-			trigger_error(__CLASS__ . ':' . __FUNCTION__ .
-					':Unknown encryption algorithm detected.',
-					E_USER_ERROR);
-		}
-	}
-
-	/**
 	 * Gets the algorithm parameters from the given hash
 	 * 
 	 * @param string $hash
@@ -167,15 +145,47 @@ class xtc_encryption_wrapper {
 		} elseif (empty($algorithm) && !empty($hash)) {
 			return self::getAlgorithm($hash);
 		} else {
-			if ($algorithm != self::ALGORITHM_MD5
-					&& $algorithm != self::ALGORITHM_PBKDF2
-					&& $algorithm != self::ALGORITHM_SCRYPT
-					&& $algorithm != self::ALGORITHM_BCRYPT) {
-				trigger_error(__CLASS__ . ':' . __FUNCTION__ .
-						':Invalid encryption algorithm defined.',
-						E_USER_ERROR);
-			}
+			self::validateAlgorithm($algorithm);
 			return $algorithm;
+		}
+	}
+	
+	/**
+	 * Detects the used algorithm for a given password hash
+	 * 
+	 * @param string $hash
+	 * @return int
+	 */
+	private static function getAlgorithm($hash) {
+		if (preg_match('/^.+:\d+:.+:.+$/', $hash)) {
+			return self::ALGORITHM_PBKDF2;
+		} elseif (preg_match('/^\d+\$\d+\$\d+\$.+\$.+$/', $hash)) {
+			return self::ALGORITHM_SCRYPT;
+		} elseif (preg_match('/^.+\$.+\$[$.\/0-9A-Za-z]+$/', $hash)) {
+			return self::ALGORITHM_BCRYPT;
+		} elseif (preg_match('/^[a-f0-9]{32}$/i', $hash)) {
+			return self::ALGORITHM_MD5;
+		} else {
+			trigger_error(__CLASS__ . ':' . __FUNCTION__ .
+					':Unknown encryption algorithm detected.',
+					E_USER_ERROR);
+		}
+	}
+
+	/**
+	 * Validates the given algorithm and triggers and E_USER_ERROR if
+	 * the algorithm is not supported.
+	 * 
+	 * @param type $algorithm
+	 */
+	private static function validateAlgorithm($algorithm) {
+		if ($algorithm != self::ALGORITHM_MD5
+				&& $algorithm != self::ALGORITHM_PBKDF2
+				&& $algorithm != self::ALGORITHM_SCRYPT
+				&& $algorithm != self::ALGORITHM_BCRYPT) {
+			trigger_error(__CLASS__ . ':' . __FUNCTION__ .
+					':Invalid encryption algorithm defined.',
+					E_USER_ERROR);
 		}
 	}
 }
