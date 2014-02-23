@@ -169,6 +169,7 @@ class xtc_encryption_wrapper {
 	 */
 	private static function checkAlgorithm($algorithm, $hash = null) {
 		if (empty($algorithm) && empty($hash)) {
+			self::checkInsecureAlgorithm();
 			return self::$ALGORITHM_DEFAULT;
 		} elseif (empty($algorithm) && !empty($hash)) {
 			return self::getAlgorithm($hash);
@@ -217,6 +218,19 @@ class xtc_encryption_wrapper {
 			trigger_error(__CLASS__ . '::' . __FUNCTION__ .
 					' Invalid encryption algorithm defined.',
 					E_USER_ERROR);
+		}
+	}
+	
+	/**
+	 * Checks for an insecure default algorithm and triggers E_USER_WARNING
+	 * if an insecure default encryption algorithm is defined.
+	 */
+	private static function checkInsecureAlgorithm() {
+		if(self::$ALGORITHM_DEFAULT == self::ALGORITHM_MD5 ||
+				self::$ALGORITHM_DEFAULT == self::ALGORITHM_SHA1SALT) {
+			trigger_error(__CLASS__ . '::' . __FUNCTION__ .
+					' Insecure default encryption algorithm defined.',
+					E_USER_WARNING);
 		}
 	}
 }
